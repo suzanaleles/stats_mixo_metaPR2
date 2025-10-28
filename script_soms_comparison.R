@@ -1,8 +1,8 @@
-#########################################################################################################
-# Mapping Mixoplankton: Environmental Drivers and Global Distribution within Marine Protist Communities #
-# MetaPR2 data + Mixoplankton Database: analysis for V9-micro, V9-total, and V4-total datasets          #
-# Code by Suzana G Leles, July 25 2025                                                                  #
-#########################################################################################################
+################################################################################################################################
+# Environmental Associations and Distribution of Mixoplankton within Protist Communities Across Global Oceanographic Gradients #
+# MetaPR2 data + Mixoplankton Database: analysis for V9-micro, V9-total, and V4-total datasets                                 #                         #
+# Code by Suzana G Leles, October 28 2025                                                                                      #
+################################################################################################################################
 
 rm(list = ls())
 
@@ -173,26 +173,6 @@ pcbiomes <- ggplot(data = pca_scores3, aes(x = PC1, y = PC2, fill = factor(biome
 
 pcbiomes
 
-pca_biomes <- ggplot(data = pca_scores3, aes(x = PC1, y = PC2, fill = factor(biome), shape = dataset)) +
-  geom_point(size = 4) +
-  scale_shape_manual(values = c(22,24,21)) +
-  scale_fill_manual(values = col_com,
-                    guide = guide_legend(override.aes = list(shape = 21))) +
-  xlab('PC1 (67.0%)') +
-  ylab('PC2 (22.2%)')  +
-  xlim(-2,4) +
-  ylim(-2,2)+
-  geom_segment(data = load_raw, aes(x = 0, xend = PC1, y = 0, yend = PC2), 
-               color = 'black', arrow = arrow(length = unit(0.05,"npc")), size = 1.5, inherit.aes = FALSE) +
-  geom_label_repel(data = load_raw, aes(x = PC1, y = PC2, label = Variable), fill = "white",
-                   color = 'black', size = 3.5, inherit.aes = FALSE, 
-                   box.padding = 0.1, point.padding = 0.2, max.overlaps = Inf) + 
-  mytheme +
-  theme(legend.position = "right",
-        legend.key = element_blank())
-
-pca_biomes
-
 # Importing data for all datasets with SOM clustering to make global maps and T-S diagrams to evaluate if these support our biome classification
 v9micro2 <- read.csv("som_map_V9_micro.csv")
 v9total2 <- read.csv("som_map_V9_total.csv")
@@ -343,7 +323,7 @@ data_all3$biome <- factor(data_all3$biome,
 
 data_all3$dataset <- factor(data_all3$dataset, levels = c("V9-micro","V9-total","V4-total"))
 
-data_all3$type <- factor(data_all3$type, levels = c("CM","eSNCM","pSNCM", "GNCM", "unassessed", "diatoms", "protozooplankton", "parasite"))
+data_all3$type <- factor(data_all3$type, levels = c("CM","eSNCM","pSNCM", "GNCM", "other phytoplankton", "diatoms", "protozooplankton", "parasite"))
 
 data_all3 <- data_all3 %>%
   group_by(dataset) %>%
@@ -519,7 +499,7 @@ combined <- prda1 + prda2 + prda3 + plot_layout(widths = c(1, 1, 1)) &
   plot_annotation(tag_levels = 'A') &
   theme(plot.tag = element_text(size = 22)) 
 
-ggsave("fig3.png", combined, device = "png", width = 16, height = 6, dpi = 600) 
+ggsave("fig3_rda.png", combined, device = "png", width = 16, height = 6, dpi = 600) 
 
 ############################################################################################
 # Assessing differences in community composition based on functional types across datasets #
@@ -541,7 +521,7 @@ pca_scores$comclust <- data_all$comclust
 pca_scores$dataset <- data_all$dataset
 
 load_raw <- as.data.frame(pca_res$rotation[, 1:2]*2)
-rownames(load_raw) <- c("CM", "GNCM", "eSNCM", "unassessed", "parasite", "diatoms", "protozooplankton", "pSNCM")
+rownames(load_raw) <- c("CM", "GNCM", "eSNCM", "other phytoplankton", "parasite", "diatoms", "protozooplankton", "pSNCM")
 load_raw$Variable <- rownames(load_raw)
 datasets <- unique(pca_scores$dataset)
 loadings <- expand.grid(Variable = load_raw$Variable, dataset = datasets)
@@ -586,11 +566,11 @@ pca_scores$comclust <- datav9$comclust
 pca_scores$dataset <- datav9$dataset
 
 load_raw <- as.data.frame(pca_res$rotation[, 1:2]*2)
-rownames(load_raw) <- c("CM", "GNCM", "eSNCM", "unassessed", "parasite", "diatoms", "protozooplankton", "pSNCM")
+rownames(load_raw) <- c("CM", "GNCM", "eSNCM", "other phytoplankton", "parasite", "diatoms", "protozooplankton", "pSNCM")
 load_raw$Variable <- rownames(load_raw)
 datasets <- unique(pca_scores$dataset)
 loadings <- expand.grid(Variable = load_raw$Variable, dataset = datasets)
-oadings <- merge(loadings, load_raw, by = "Variable")
+loadings <- merge(loadings, load_raw, by = "Variable")
 
 pcbiotic2 <- ggplot(data = pca_scores, aes(x = PC1, y = PC2, fill = factor(dataset))) +
   geom_point(color = "black", shape = 21, size = 4) +

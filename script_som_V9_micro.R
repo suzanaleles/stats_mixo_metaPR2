@@ -1,8 +1,8 @@
-#########################################################################################################
-# Mapping Mixoplankton: Environmental Drivers and Global Distribution within Marine Protist Communities #
-# MetaPR2 data + Mixoplankton Database: analysis for V9-micro dataset                                   #
-# Code by Suzana G Leles, July 25 2025                                                                  #
-#########################################################################################################
+################################################################################################################################
+# Environmental Associations and Distribution of Mixoplankton within Protist Communities Across Global Oceanographic Gradients #
+# MetaPR2 data + Mixoplankton Database: analysis for V9-micro dataset                                                          #
+# Code by Suzana G Leles, October 28 2025                                                                                         #
+################################################################################################################################
 
 rm(list = ls())
 
@@ -481,7 +481,7 @@ data_eco_sum <- data_eco_long2 %>% group_by(comclust, station, classification, t
 
 data_eco_sum$type <- factor(data_eco_sum$type, 
                             levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "parasite", "phytoplankton", "protozooplankton"),
-                            labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "parasites", "diatoms", "protozooplankton"))
+                            labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "parasites", "diatoms", "protozooplankton"))
 
 # Generate 8 colors from the BuRd color palette
 colors <- brewer.pal(8, "RdBu")
@@ -579,6 +579,9 @@ any(is.na(df_heatmap))
 # remove any text that appears after "_", including it
 df_heatmap <- df_heatmap %>% mutate(genus = str_remove(genus, "_.*"))
 
+df_heatmap <- df_heatmap %>%
+  mutate(genus = str_replace_all(genus, "Phalachroma", "Phalacroma"))
+
 # Now we have entries for all genus by comclust! 
 genus_count <- df_heatmap %>%
   group_by(comclust) %>%
@@ -615,8 +618,8 @@ fig4 <- ggplot() +
   geom_tile(data = df_heatmap, aes(y = interaction(genus, type), x = factor(comclust), fill = avg)) +
   geom_point(data = df_type_color, aes(x = 0.425,y = interaction(genus, type),color = type), pch = 15, size = 4) +
   scale_y_discrete(labels = df_type_color$y_label) +
-  scale_color_manual(values = colors_type2, name = "Trophic Type",
-                     labels = c("parasites", "protozooplankton", "diatoms","unassessed", "pSNCMs", "eSNCMs", "CMs")) +
+  scale_color_manual(values = colors_type2, name = "Functional Type",
+                     labels = c("parasites", "protozooplankton", "diatoms","other phytoplankton", "pSNCMs", "eSNCMs", "CMs")) +
   xlab("Community clusters") +
   ylab("") +
   scale_fill_gradientn(
@@ -693,6 +696,9 @@ any(is.na(df_heatmap))
 # remove any text that appears after "_", including it
 df_heatmap <- df_heatmap %>% mutate(genus = str_remove(genus, "_.*"))
 
+df_heatmap <- df_heatmap %>%
+  mutate(genus = str_replace_all(genus, "Phalachroma", "Phalacroma"))
+
 # Now we have entries for all genus by biome! 
 genus_count <- df_heatmap %>%
   group_by(biome) %>%
@@ -733,7 +739,7 @@ fig4b <- ggplot() +
   geom_point(data = df_type_color, aes(x = 0.425,y = interaction(genus, type),color = type), pch = 15, size = 4) +
   scale_y_discrete(labels = df_type_color$y_label) +
   scale_color_manual(values = colors_type2, name = "Trophic Category",
-                     labels = c("parasites", "protozooplankton", "diatoms","unassessed", "pSNCMs", "eSNCMs", "CMs")) +
+                     labels = c("parasites", "protozooplankton", "diatoms","other phytoplankton", "pSNCMs", "eSNCMs", "CMs")) +
   xlab("") +
   ylab("") +
   scale_fill_gradientn(
@@ -772,7 +778,7 @@ colors <- brewer.pal(8, "RdBu")
 
 data_eco_wide5$type <- factor(data_eco_wide5$type, 
                               levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "phytoplankton", "protozooplankton", "parasite"),
-                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "diatoms", "protozooplankton", "parasite"))
+                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "diatoms", "protozooplankton", "parasite"))
 
 colors <- c("#B2182B", "#D6604D", "#F4A582", "#FDDBC7", "lightgray", "#92C5DE", "#4393C3", "#2166AC")
 
@@ -817,7 +823,7 @@ data_eco_long3 <- data_eco_long2 %>%
 
 data_eco_long3$type <- factor(data_eco_long3$type, 
                               levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "phytoplankton", "protozooplankton", "parasite"),
-                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "diatoms", "protozooplankton", "parasites"))
+                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "diatoms", "protozooplankton", "parasites"))
 
 # Test if linear models are better than GLMs or GAMs
 
@@ -1342,7 +1348,7 @@ pc6 <- ggplot(data_eco_wide6, aes(x = factor(comclust), y = relab_adjusted, grou
   geom_line(size = 1) + 
   geom_point(size = 4, shape = 21, aes(fill = factor(comclust))) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
-  scale_fill_manual(values = col_com, name = "Trophic Type") +
+  scale_fill_manual(values = col_com, name = "Functional Type") +
   facet_wrap(~type, ncol = 2, scales = "free_y") +
   scale_y_continuous(expand = expansion(mult = c(0.12, 0.12)), breaks = function(x) pretty(x, n = 3),) +
   mytheme +
@@ -1476,7 +1482,7 @@ df2_with_type <- df2 %>%
 rownames(df3) <- sub("^env", "", rownames(df3))
 
 # if running V9-micro
-rownames(df3) <- c("CM", "GNCM", "eSNCM", "unassessed", "parasite", "diatoms", "protozooplankton", "temperature", "salinity", "nitrate")
+rownames(df3) <- c("CM", "GNCM", "eSNCM", "other phytoplankton", "parasite", "diatoms", "protozooplankton", "temperature", "salinity", "nitrate")
 
 library(ggrepel)
 

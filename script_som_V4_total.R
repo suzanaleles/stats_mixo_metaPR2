@@ -1,8 +1,8 @@
-#########################################################################################################
-# Mapping Mixoplankton: Environmental Drivers and Global Distribution within Marine Protist Communities #
-# MetaPR2 data + Mixoplankton Database: analysis for V4-total dataset                                   #
-# Code by Suzana G Leles, July 25 2025                                                                  #
-#########################################################################################################
+################################################################################################################################
+# Environmental Associations and Distribution of Mixoplankton within Protist Communities Across Global Oceanographic Gradients #
+# MetaPR2 data + Mixoplankton Database: analysis for V9-micro dataset                                                          #
+# Code by Suzana G Leles, October 28 2025                                                                                         #
+################################################################################################################################
 
 rm(list = ls())
 
@@ -553,7 +553,7 @@ data_eco_sum <- data_eco_long2 %>% group_by(comclust, station, classification, t
 
 data_eco_sum$type <- factor(data_eco_sum$type, 
                               levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "parasite", "phytoplankton", "protozooplankton"),
-                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "parasites", "diatoms", "protozooplankton"))
+                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "parasites", "diatoms", "protozooplankton"))
 
 # Generate 8 colors from the BuRd color palette
 colors <- brewer.pal(8, "RdBu")
@@ -691,7 +691,7 @@ fig4 <- ggplot() +
   geom_point(data = df_type_color, aes(x = 0.425,y = interaction(genus, type),color = type), pch = 15, size = 4) +
   scale_y_discrete(labels = df_type_color$y_label) +
   scale_color_manual(values = colors_type2, name = "Trophic Type",
-                     labels = c("parasites", "protozooplankton", "diatoms","unassessed", "pSNCMs", "eSNCMs", "CMs")) +
+                     labels = c("parasites", "protozooplankton", "diatoms","other phytoplankton", "pSNCMs", "eSNCMs", "CMs")) +
   xlab("Community clusters") +
   ylab("") +
   scale_fill_gradientn(
@@ -809,7 +809,7 @@ fig4b <- ggplot() +
   geom_point(data = df_type_color, aes(x = 0.425,y = interaction(genus, type),color = type), pch = 15, size = 4) +
   scale_y_discrete(labels = df_type_color$y_label) +
   scale_color_manual(values = colors_type2, name = "Trophic Category",
-                     labels = c("parasites", "protozooplankton", "diatoms","unassessed", "pSNCMs", "eSNCMs", "CMs")) +
+                     labels = c("parasites", "protozooplankton", "diatoms","other phytoplankton", "pSNCMs", "eSNCMs", "CMs")) +
   xlab("") +
   ylab("") +
   scale_fill_gradientn(
@@ -849,7 +849,7 @@ colors <- brewer.pal(8, "RdBu")
 
 data_eco_wide5$type <- factor(data_eco_wide5$type, 
                               levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "phytoplankton", "protozooplankton", "parasite"),
-                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "diatoms", "protozooplankton", "parasite"))
+                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "diatoms", "protozooplankton", "parasite"))
 
 colors <- c("#B2182B", "#D6604D", "#F4A582", "#FDDBC7", "lightgray", "#92C5DE", "#4393C3", "#2166AC")
 
@@ -894,7 +894,7 @@ data_eco_long3 <- data_eco_long2 %>%
 
 data_eco_long3$type <- factor(data_eco_long3$type, 
                               levels = c("CM", "eSNCM", "pSNCM", "GNCM", "not assessed", "phytoplankton", "protozooplankton", "parasite"),
-                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "unassessed", "diatoms", "protozooplankton", "parasites"))
+                              labels = c("CM", "eSNCM", "pSNCM", "GNCM", "other phytoplankton", "diatoms", "protozooplankton", "parasites"))
 
 # remove salinity values that are problematic (unrealistic)
 max(data_eco_long3$salinity, na.rm = "TRUE")
@@ -1407,7 +1407,7 @@ df2_with_type <- df2 %>%
   left_join(df1_unique, by = "asv")
 
 rownames(df3) <- sub("^env", "", rownames(df3))
-rownames(df3) <- c("CM", "unassessed", "parasite", "diatoms", "protozooplankton", "GNCM", "pSNCM", "temperature", "salinity", "nitrate")
+rownames(df3) <- c("CM", "other phytoplankton", "parasite", "diatoms", "protozooplankton", "GNCM", "pSNCM", "temperature", "salinity", "nitrate")
 
 library(ggrepel)
 
