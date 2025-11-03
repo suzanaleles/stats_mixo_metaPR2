@@ -1389,9 +1389,17 @@ plot(dbRDA, display = "sites", type = "points")
 plot(dbRDA, display = "species", type = "points")
 
 dbRDAsum <- summary(dbRDA)
-df1 <- data.frame(dbRDAsum$sites[,1:2])
-df2 <- data.frame(dbRDAsum$species[,1:2]) 
-df3 <- data.frame(dbRDAsum$biplot[,1:2])
+
+# Extract site scores (rows = sites)
+df1 <- as.data.frame(scores(dbRDA, display = "sites"))
+# Extract species scores (rows = ASVs)
+df2 <- as.data.frame(scores(dbRDA, display = "species"))
+# Extract biplot scores (rows = environmental variables)
+df3 <- as.data.frame(scores(dbRDA, display = "bp"))
+
+#df1 <- data.frame(dbRDAsum$sites[,1:2])
+#df2 <- data.frame(dbRDAsum$species[,1:2]) 
+#df3 <- data.frame(dbRDAsum$biplot[,1:2])
 
 df2 <- df2 %>% mutate(asv = rownames(df2))
 df1$station <- data_rda$station

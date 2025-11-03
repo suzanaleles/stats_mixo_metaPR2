@@ -9,11 +9,12 @@ rm(list = ls())
 # Load required libraries
 library(maps)
 library(ggplot2)
+library(ggtext)
+library(ggrepel)
 library(SOMbrero)
 library(dplyr)
 library(patchwork)
 library(tidyverse)
-library(SOMbrero)
 library(vegan)
 
 # General plotting settings ####
@@ -721,8 +722,6 @@ colors_type2 <- c("#2166AC", "#4393C3", "#92C5DE", "lightgray", "#D6604D","#B218
 
 # plot heatmap
 
-library(ggtext)
-
 # make sure genera name appear italicized
 df_type_color <- df_type_color %>%
   mutate(y_label = if_else(str_detect(genus, "-"), paste0(genus), paste0("*", genus, "*")))
@@ -1300,9 +1299,18 @@ plot(dbRDA, display = "sites", type = "points")
 plot(dbRDA, display = "species", type = "points")
 
 dbRDAsum <- summary(dbRDA)
-df1 <- data.frame(dbRDAsum$sites[,1:2])
-df2 <- data.frame(dbRDAsum$species[,1:2]) 
-df3 <- data.frame(dbRDAsum$biplot[,1:2])
+
+# Extract site scores (rows = sites)
+df1 <- as.data.frame(scores(dbRDA, display = "sites"))
+# Extract species scores (rows = ASVs)
+df2 <- as.data.frame(scores(dbRDA, display = "species"))
+# Extract biplot scores (rows = environmental variables)
+df3 <- as.data.frame(scores(dbRDA, display = "bp"))
+
+
+#df1 <- data.frame(dbRDAsum$sites[,1:2])
+#df2 <- data.frame(dbRDAsum$species[,1:2]) 
+#df3 <- data.frame(dbRDAsum$biplot[,1:2])
 
 df2 <- df2 %>% mutate(asv = rownames(df2))
 df1$station <- data_rda$station
