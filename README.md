@@ -10,4 +10,4 @@
 5) Run script_som_comparison.R
 
 
-#### Citation: Larsson, M.E., Leles, S.G., Mitra, A. et al. Environmental structuring of mixoplankton functional types within marine protist communities: a global analysis. Ocean Microbiol. 2, 1 (2026). https://doi.org/10.1186/s44375-026-00007-3
+#### Citation: Larsson, M.E., Leles, S.G., Mitra, A., Faure, E., Vaulot, D., and Santoferrera, L. Environmental structuring of mixoplankton functional types within marine protist communities: a global analysis. Ocean Microbiol. 2, 1 (2026). https://doi.org/10.1186/s44375-026-00007-3
