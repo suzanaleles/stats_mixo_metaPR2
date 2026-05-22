@@ -1,6 +1,6 @@
 # Statistical analyses for Larsson, Leles et al.
 
-## Environmental Associations and Distribution of Mixoplankton within Protist Communities Across Global Oceanographic Gradients
+## Environmental structuring of mixoplankton functional types within marine protist communities: a global analysis
 
 ### How to run the code:
 1) Unzip the dataset (metapr2_initial_data.zip)
